@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="jdbcConfig.properties">
+<!--        <property name="driver" value="com.mysql.cj.jdbc.Driver"/>-->
+<!--        <property name="url" value="jdbc:mysql://localhost:3306/mybatis?serverTimezone=GMT%2B8"/>-->
+<!--        <property name="username" value="root"/>-->
+<!--        <property name="password" value="123456"/>-->
+    </properties>
+    <settings>
+        <!--开启二级缓存-->
+        <setting name="cacheEnabled" value="true"/>
+        <!--开启延迟加载-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="true"/>
+    </settings>
+    <typeAliases>
+        <!--指定别名，package方式指定包下的所有实体类的别名为类名-->
+        <package name="com.domain"/>
+    </typeAliases>
+
+    <!-- 数据库环境 -->
+    <environments default="mysql">
+        <environment id="mysql">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!-- 映射文件 -->
+    <mappers>
+        <mapper resource="com/dao/UserDao.xml"/>
+        <mapper resource="com/dao/AccountDao.xml"/>
+        <!--package指定dao接口包下的接口文件，不用像上面的mapper一样每个都配置一个mapper-->
+    </mappers>
+</configuration>
