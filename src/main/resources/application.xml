@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+    <!--使用默认的无参构造，获取对象-->
+    <bean id="student" class="com.spring.Student"></bean>
+
+    <!--方式二通过工厂模式获取对象-->
+    <bean id="studentFactory" class="com.spring.StudentFactory"></bean>
+    <bean id="student1" factory-bean="studentFactory" factory-method="getStudent"></bean>
+
+    <!--方式三-->
+    <bean id="student2" class="com.spring.StudentFactory" factory-method="staticGetStudent"></bean>
+
+    <!--
+        scope:配置实例化是单例还是多例
+            singleton：单例
+            prototype:多例
+        init-method：指定初始化方法
+        destroy-method：指定销毁方法
+            销毁方法：当指定为单例时，调用context.close()时即会触发
+            当指定为多例时，调用context.close()时不会触发，因为单例模式和多例模式的创建时期不一致，
+            多例模式创建后只有等垃圾回收器回收
+
+        对实例化的对象进行值得注入
+            <property name="name" value="张三"></property>
+            name指定变量名称
+            value指定值
+            ref指定引用类型得值
+    -->
+    <bean id="student3" class="com.spring.Student" scope="singleton" >
+        <property name="name" value="张三"></property>
+        <property name="age" value="22"></property>
+        <property name="birthday" ref="birthday"></property>
+
+        <!--指定List赋值-->
+        <property name="list">
+            <list>
+                <value>AAAA</value>
+                <value>BBBB</value>
+                <value>AAAA</value>
+            </list>
+        </property>
+
+        <property name="set">
+            <set>
+                <value>AAAA</value>
+                <value>BBBB</value>
+                <value>AAAA</value>
+            </set>
+        </property>
+
+        <property name="map">
+            <map>
+                <entry key="name" value="张三"></entry>
+                <entry key="age" value="22"></entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="birthday" class="java.util.Date"></bean>
+
+
+    <!--注解方式注入容器对象-->
+    <!--
+        注入对象得注解：
+            Component:通用得注入对象
+            Repository：component得子注解对象，通常被用来标识持久层得对象注入
+            Service：component得子注解对象，通常被用来标识业务层得对象注入
+            Controller：component得子注解对象，通常被用来标识控制层得对象注入
+
+        值得注入：
+            @Autowired
+            private People people;
+
+            @Autowired 将容器中指定类型得对象赋值给引用对象
+                当容器中存在多个相同类型得对象时，可通过指定变量名得形式去匹配容器中得具体哪个对象
+
+             @Autowired
+            @Qualifier(value ="people" )
+            private People people;
+                当容器中存在多个相同类型得对象时，也可以通过@Autowired+@Qualifier(value ="people" )注解来指定具体匹配
+                哪个对象，其中@Qualifier(value ="people" )value指定得就是具体对象得id
+
+           @Resource(name = "people")
+               当容器中存在多个相同类型得对象时，同样可以通过@Resource(name = "people")来指定具体匹配哪个对象，name属性
+               指定得就是容器中具体得对象的id
+    -->
+    <!--自动扫描包包下的bean，用类名且第一个字母小写作为bean对象的id-->
+    <context:component-scan base-package="com.spring"></context:component-scan>
+</beans>

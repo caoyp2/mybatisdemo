@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+    <bean id="aopProducer" class="com.spring.aop.Producer"></bean>
+
+    <bean id="aopLogger" class="com.spring.aop.Logger"></bean>
+
+    <!--
+        配置aop
+        <aop:config>
+
+    -->
+    <aop:config>
+        <!--配置切面
+            <aop:aspect
+        -->
+        <aop:aspect id="logger" ref="aopLogger">
+            <!--配置切如方式和切入点
+                其中切入点的配置：默认是：public int com.spring.aop.IProducer.saveAccount()
+                但是其中public 可以省略不写
+                    int 可以用*作为通配符
+                    包名层级也可以用*作为通配符，且每个层级都要用*代表
+                    类名，方法名也可用*进行通配
+                    参数类型可用(..)表示通配，代表参数可以为0个或多个
+            -->
+            <aop:before method="printLogger" pointcut="execution(public int com.spring.aop.Producer.saveAccount())"></aop:before>
+        </aop:aspect>
+    </aop:config>
+</beans>
